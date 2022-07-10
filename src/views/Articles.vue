@@ -12,78 +12,46 @@
 
         <div class="titles-container">
             <ul>
-                <router-link style="text-decoration: none" v-for="article in articles"
-                :key="article.id"
-                :to="{name: 'ReadArticle', params: {id: article.id}}">
+                <!-- <router-link style="text-decoration: none" v-for="title in titles"
+                :key="title.id"
+                :to="{name: 'ReadArticle', params: {id: title.id}}">
                     <TitleListItem 
-                        :time="article.time"
-                        :key="article.id">
-                        {{ article.title }}
+                        :time="title.createTime"
+                        :key="title.id">
+                        {{ title.title }}
                     </TitleListItem>
-                </router-link>
+                </router-link> -->
+                <TitleListItem  v-for="title in titles"
+                    @gotoClick="gotoDetail(title.id)"
+                    @removeClick="remove(title.id)"
+                    :time="title.createTime"
+                    :key="title.id">
+                    {{ title.title }}
+                </TitleListItem>
+
             </ul>
         </div>
+        <PaginationBar v-model:current="page.current" :total="page.total" />
     </div>
 </template>
 
 <script>
 import CategoryButton from "@/components/CategoryButton.vue";
 import TitleListItem from "@/components/TitleListItem.vue";
+import PaginationBar from "@/components/PaginationBar.vue"
+import Utils from '@/utils/utils.js'
 
 export default {
-    components: {CategoryButton, TitleListItem},
+    components: {CategoryButton, TitleListItem, PaginationBar},
     data() {
         return {
             curCatIdx: 0,
-            catList: [
-                {name: 'All', id: null, isActive: true},
-                {name: 'Econ', id: 1, isActive: false},
-                {name: 'Health', id: 2, isActive: false},
-                {name: 'Default', id: 0, isActive: false},
-                {name: 'Econ', id: 1, isActive: false},
-                {name: 'Health', id: 2, isActive: false},
-                {name: 'Default', id: 0, isActive: false},
-                {name: 'Econ', id: 1, isActive: false},
-                {name: 'Health', id: 2, isActive: false},
-                {name: 'Default', id: 0, isActive: false},
-                {name: 'Econ', id: 1, isActive: false},
-                {name: 'Health', id: 2, isActive: false},
-                {name: 'Health', id: 2, isActive: false},
-                {name: 'Default', id: 0, isActive: false},
-                {name: 'Econ', id: 1, isActive: false},
-                {name: 'Health', id: 2, isActive: false},
-                {name: 'Default', id: 0, isActive: false},
-                {name: 'Econ', id: 1, isActive: false},
-                {name: 'Health', id: 2, isActive: false},
-
-
-            ],
-            articles: [
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 0},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 1},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 2},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 0},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 1},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 2},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 0},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 1},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 2},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 0},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 1},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 2},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 0},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 1},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 2},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 0},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 1},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 2},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 0},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 1},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 2},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 0},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 1},
-                {title: 'What is the “Great Replacement” right-wing conspiracy theory?', time: 'April 21, 2022 10:37 PM', id: 2},
-            ]
+            catList: [],
+            titles: [],
+            page: {
+                current: 1,
+                total: 1
+            }
         }
     },
     methods: {
@@ -91,8 +59,62 @@ export default {
             this.catList[this.curCatIdx].isActive = false
             this.curCatIdx = index;
             this.catList[index].isActive = true;
+            this.fetchTitles()
+        },
+        async fetchCatList(){
+            let res = await this.$myAxios.get("/category")
+            let catList = res.data.map(cat => { return {...cat, isActive: false} })
+            catList.unshift( {name: 'All', id: null, isActive: true} )
+            this.catList = catList
+        },
+        async fetchTitles(){
+            if (this.catList.length == 0){
+                return
+            }
+            let cat = this.catList[this.curCatIdx]
+            let catId = cat.id
+            let param = {
+                pageNumber: this.page.current - 1,
+                pageSize: 10,
+            }
+            if (catId != null) {
+                param.categoryId = catId
+            }
+            let paramStr = Utils.convertObject2ParamString(param)
+            let res = await this.$myAxios.get(`/article?${paramStr}`)
+
+            this.page.total = res.data.totalPages
+            this.titles = res.data.content
+            this.titles.forEach(t => {
+                t.createTime = Utils.prettyTime(t.createTime)
+            }) 
+        },
+        gotoDetail(id) {
+            this.$router.push({name: "ReadArticle", params: {id}})
+        },
+        remove(id) {
+            this.$myConfirm(
+                'Are you sure to delete this article?',
+                ''
+            ).then( result => {
+                if (result.isConfirmed) {
+                    this.$myAxios.delete(`/article/${id}`)
+                    .then(() => {
+                        this.fetchTitles()
+                    })
+                }
+            })
         }
-    }
+    },
+    watch: {
+        'page.current'(){
+            this.fetchCatList()  
+        }
+    },
+    async mounted() {
+        await this.fetchCatList() 
+        await this.fetchTitles()
+    },
 }
 
 </script>
@@ -106,8 +128,7 @@ export default {
 
 .titles-container {
     margin: 3rem 0;
-    overflow: scroll;
-    height: 60vh;
+    height: 55vh;
 }
 
 
@@ -120,5 +141,7 @@ export default {
 .categories-container > *{
     margin: 0.6rem;
 }
+
+
 
 </style>

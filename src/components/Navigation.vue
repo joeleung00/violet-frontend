@@ -4,7 +4,7 @@
             <button class="sidebar-btn" @click="$emit('pressSidebarBtn')">
                 <img src="/images/sidebarIcon.svg" alt="sidebar icon">
             </button>
-            <h2 class="logo">Deep Learn English</h2>
+            <router-link to="/articles"><h2 class="logo">Violet</h2></router-link>
         </span>
         <span>
             <router-link :to="{name: 'Add'}">
@@ -12,7 +12,7 @@
                     <img src="/images/addBtn.svg" alt="Add Button">
                 </button>
             </router-link>
-            <button class="exit-btn">
+            <button class="exit-btn" @click="logout">
                 <img src="/images/exitIcon.svg" alt="Exit Icon">
                 <p>Logout</p>
             </button>
@@ -21,15 +21,38 @@
 </template>
 
 <script>
+export default {
+    methods: {
+        logout(){
+            this.$myConfirm(
+                'Are you sure to logout?',
+                ''
+            ).then( result => {
+                if (result.isConfirmed){
+                    this.$store.dispatch('Logout')
+                    .then(() => {this.$router.push("/login")})
+                }
+            })
+        }
+    }
+}
 
 </script>
 
 
 <style>
 
+.logo {
+    font-size: 2rem;
+    padding-left: 2rem;
+    color: #A771A3;
+    font-family: 'Dancing Script', cursive;
+}
+
 .nav {
     display: flex;
     justify-content: space-between;
+    background-color: white;
 }
 
 .sidebar-btn {

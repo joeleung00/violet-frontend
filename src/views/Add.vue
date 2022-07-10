@@ -6,12 +6,12 @@
         </div>        
         <div class="category">
             <label>Category:</label>
-            <select name="category" v-model="category">
-                <option value="volvo">Volvo</option>
-                <option value="saab">Saab</option>
-                <option value="opel">Opel</option>
-                <option value="audi">Audi</option>
-                <option value="Default">Default</option>
+            <select name="category" v-model="catIdx" selected="0">
+                <option v-for="(cat, index) in catList"
+                    :key="index"
+                    :value="index">
+                    {{ cat.name }}
+                </option>
             </select>
         </div>
         <div class="body">
@@ -24,7 +24,7 @@
     </div>
 
     <div v-else class="preview-container">
-        <CategoryButton class="cat-btn" :isActive="true">{{ category }}</CategoryButton>
+        <CategoryButton class="cat-btn" :isActive="true">{{ catList[catIdx].name }}</CategoryButton>
         <h2>Preview</h2>
 
         <div class="preview-box">
@@ -37,7 +37,8 @@
 
         <div class="btn-region">
             <button @click="toInput">Back</button>
-            <button @click="submit">Done</button>
+            <button v-if="submitDisabled" disabled class="disabled">Done</button>
+            <button v-else @click="submit">Done</button>
         </div>
     </div>
 </template>
@@ -46,23 +47,29 @@
 import CategoryButton from '@/components/CategoryButton.vue';
 
 function splitIntoParagraph(input){
-    return input.split(/(?:\r?\n)+/).map((str) => str.trim());
+    return input.split(/(?:\r?\n){2}/).map((str) => str.trim());
 }
 
 export default {
+    components: { CategoryButton },
     data() {
         return {
             title: "",
-            category: "Default",
+            catIdx: 0,
             body: "",
             paragraphs: [],
-            isInput: true
+            isInput: true,
+            catList: [],
+            submitDisabled: false
         };
     },
     methods: {
+        disableSubmit(){
+
+        },
         toPreview() {
             if (this.title.trim().length == 0 || this.body.trim().length == 0) {
-                alert("please enter title and body");
+                this.$myAlert("Please fill in the Title and Body");
             }
             else {
                 this.paragraphs = splitIntoParagraph(this.body);
@@ -72,11 +79,36 @@ export default {
         toInput() {
             this.isInput = true;
         },
-        submit() {
-            alert("submitted");
+        async submit() {
+            this.submitDisabled = true
+            let body = {
+                title: this.title,
+                body: this.paragraphs 
+            }
+            let catId = this.catList[this.catIdx].id
+            if (catId !== null){
+                body.categoryId = catId 
+            } 
+
+            let res = await this.$myAxios.post('/article', body)
+            this.submitDisabled = false
+            this.$router.push('/articles')
+
+
+        },
+        async fetchCatList(){
+            let res = await this.$myAxios.get('/category')
+            this.catList = res.data 
+            this.catList.unshift({
+                id: null,
+                name: 'Default'
+            })
         }
     },
-    components: { CategoryButton }
+    mounted(){
+        this.fetchCatList()
+    }
+
 }
 </script>
 
@@ -113,6 +145,7 @@ export default {
 
 .category > select {
     padding: 0.25rem 1.5rem;
+    font-size: 1rem;
     border-radius: 0.8rem;
 }
 
@@ -129,9 +162,8 @@ export default {
 .body > textarea {
     vertical-align: center;
     display: inline-block;
-
     width: 70%;
-    height: 60vh;
+    height: 55vh;
     padding: 1rem 1rem;
     font: normal 400 18px/32px AkkuratPro,sans-serif;
     border-radius: 1rem;
@@ -151,13 +183,26 @@ button {
     height: 37px;
     border: none;
     background-color: #AA5CB2;
-    color: white;
+
+color: white;
     margin: 2rem 1rem;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.disabled {
+    background-color: grey;
+}
+
+.disabled:hover {
+    cursor: wait;
 }
 
 .preview-container {
     width: 100%;
-    height: 100%;
+    height: 65vh;
 }
 
 .preview-container > h2 {
@@ -172,7 +217,7 @@ button {
     margin: 2rem 12rem;
     border: 1px solid black;
     padding: 1.5rem;
-    height: 75%;
+    height: 100%;
     overflow: scroll;
 
 }

@@ -1,5 +1,9 @@
 <template>
     <div>
+        <div class="top">
+            <h1 class="logo">Violet</h1>
+            <p>An application to save and translate your favourite articles.</p>
+        </div>
         <div class="center-box">
             <h3>Login</h3>
             <form @submit.prevent="signIn">
@@ -12,7 +16,7 @@
                 </div>
             </form>
             <div class="text-container">
-                <p><a href="">Create a new account</a></p>
+                <p><router-link to="/register">Create a new account</router-link></p>
                 <p><a href="">Forget password?</a></p>
             </div>
         </div>
@@ -35,20 +39,44 @@ export default {
         }
     },
     methods: {
-        signIn(){
-            alert(this.username + this.password);
+        async signIn(){
+            let userForm = new FormData()
+            userForm.append('username', this.username)
+            userForm.append('password', this.password)
+            try {
+                let res = await this.$store.dispatch('Login', userForm)
+                this.$router.push("/")
+            }
+            catch (e) {
+                this.$myAlert(e)
+            }
         }
     }
 }
 </script>
 
 
-<style>
+<style scoped>
+.logo {
+    font-size: 5rem;
+    color: #A771A3;
+    font-family: 'Dancing Script', cursive;
+    margin: 10rem auto 0 auto;
+}
+
+.top {
+    text-align: center;
+}
+
+.top > p {
+    color: grey;
+}
+
 .center-box {
     border: 1px solid black;
     width: 629px;
     height: 470px;
-    margin: 25vh auto;
+    margin: 0 auto;
 }
 
 h3 {
@@ -80,6 +108,10 @@ h3 {
     border: 2px solid #AA5CB2;
     background-color: white;
     color: #AA5CB2;
+}
+
+.btn-center > button:hover {
+    cursor: pointer; 
 }
 
 .text-container {

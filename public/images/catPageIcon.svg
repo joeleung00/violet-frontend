@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="25.695" height="25.695" viewBox="0 0 25.695 25.695">
+  <g id="catIcon" transform="translate(-3.48 -4.48)">
+    <path id="Path_12" data-name="Path 12" d="M4.48,15.662,17.994,29.175,28.175,18.994,14.662,5.48,5.21,6.21Z" fill="none" stroke="#d479d4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <path id="Path_13" data-name="Path 13" d="M26.242,17.06,16.06,27.242l1.419,1.522L27.764,18.479Z" transform="translate(0.329 0.329)" fill="#d479d4"/>
+    <line id="Line_7" data-name="Line 7" x1="10.182" y2="10.182" transform="translate(15.227 16.227)" fill="none" stroke="#d479d4" stroke-linecap="round" stroke-miterlimit="10" stroke-width="1"/>
+    <circle id="Ellipse_3" data-name="Ellipse 3" cx="1.543" cy="1.543" r="1.543" transform="translate(8.614 9.614)" fill="#d479d4"/>
+  </g>
+</svg>

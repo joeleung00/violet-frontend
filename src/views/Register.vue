@@ -3,8 +3,12 @@
         <div class="center-box">
             <h3>Create New Account</h3>
             <form @submit.prevent="createAccount">
-                <NormalInput placeholder="Fullname" 
-                    v-model:value="fullname" 
+                <NormalInput placeholder="First Name" 
+                    v-model:value="firstname" 
+                    iconName="userIcon.svg" 
+                    type="text"/>
+                <NormalInput placeholder="Last Name" 
+                    v-model:value="lastname" 
                     iconName="userIcon.svg" 
                     type="text"/>
                 <NormalInput placeholder="Username" 
@@ -43,7 +47,8 @@ import PasswordInput from '@/components/PasswordInput.vue';
 export default {
     data: function () {
         return {
-            fullname: "",
+            firstname: "",
+            lastname: "",
             email: "",
             username: "",
             password: "",
@@ -66,7 +71,7 @@ export default {
 </script>
 
 
-<style>
+<style scoped>
 
 .center-box {
     border: 1px solid black;

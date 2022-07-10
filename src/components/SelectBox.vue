@@ -16,12 +16,12 @@ export default {
     props: {
         mousex: {type: Number, required: true},
         mousey: {type: Number, required: true},
+        isActive: {type: Boolean, required: true}
     },
     data(){
         return {
             height: 0,
-            width: 0,
-            isActive: false
+            width: 0
         }
     },
     mounted(){
@@ -35,11 +35,7 @@ export default {
         y(){
             return (this.mousey - 1.25 * this.height) + 'px'
         }
-    },
-    created(){
-        this.isActive = true
     }
-
 }
 
 

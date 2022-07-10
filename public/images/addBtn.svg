@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40.546" height="40.499" viewBox="0 0 40.546 40.499">
+  <g id="addBtn" transform="translate(-913 -112)">
+    <g id="Rectangle_19" data-name="Rectangle 19" transform="translate(913 127.527)" fill="#d87cd8" stroke="rgba(112,112,112,0.05)" stroke-width="1">
+      <rect width="40.546" height="10" stroke="none"/>
+      <rect x="0.5" y="0.5" width="39.546" height="9" fill="none"/>
+    </g>
+    <g id="Rectangle_20" data-name="Rectangle 20" transform="translate(928.551 112)" fill="#d87cd8" stroke="rgba(112,112,112,0.05)" stroke-width="1">
+      <rect width="10" height="40.499" stroke="none"/>
+      <rect x="0.5" y="0.5" width="9" height="39.499" fill="none"/>
+    </g>
+  </g>
+</svg>

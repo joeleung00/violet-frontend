@@ -1,8 +1,13 @@
 <template>
-    <li>
-        <span class="title"><slot></slot></span>
-        <span class="time">{{ time }}</span>
-    </li>
+    <div class="title-container">
+        <li @click="$emit('gotoClick')">
+            <span class="title"><slot></slot></span>
+            <span class="time">
+                {{ time }} 
+            </span>
+        </li>
+        <img @click="$emit('removeClick')" src="/images/crossIcon2.svg">
+    </div>
 </template>
 
 
@@ -16,11 +21,14 @@ export default {
 
 <style scoped>
 
+.title-container {
+    display: flex;
+}
 
 li {
     display: flex;
+    width: 90%;
     justify-content: space-between;
-    margin-right: 4rem;
     padding: 1rem;     
 }
 
@@ -34,7 +42,18 @@ li:hover {
 }
 
 .time {
+    vertical-align: middle;
     color: #888282;
+}
+
+img {
+    display: inline-block;
+    width: 1.2rem;
+    padding: 0.5rem;
+}
+
+img:hover {
+    cursor: pointer;
 }
 
 </style>

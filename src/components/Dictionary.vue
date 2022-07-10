@@ -17,8 +17,29 @@ export default {
     },
     data(){
         return {
-            explainations: ['粗野','粗野','粗野']
+            explainations: []
         }
+    },
+    watch: {
+        vocab(){
+            this.translate()
+        }
+    },
+    methods: {
+        async translate(){
+            if (this.vocab.trim().length == 0){
+                return [] 
+            }
+
+            let res = await this.$myAxios.get(`/translate/${this.vocab}`)
+            this.explainations = res.data.explainations
+            if (this.explainations.length > 0){
+                this.$emit('isTranslated')
+            }
+        }
+    },
+    async mounted(){
+        this.translate()
     }
 }
 

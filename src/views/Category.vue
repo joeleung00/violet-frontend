@@ -25,29 +25,42 @@ export default {
     data(){
         return {
             newCatName: '',
-            catList: [
-                {id: 1, name: 'Econ'},
-                {id: 2, name: 'Health'},
-            ]
+            catList: []
         }
     },
     methods: {
-        deleteCategory(index){
-            this.catList.splice(index, 1)
+        async deleteCategory(index){
+            const catName = this.catList[index].name
+            const catId = this.catList[index].id
+            let res = await this.$myConfirm(
+                `Are you sure to delete "${catName}"?`,
+                ''
+            ) 
+            if (res.value){
+                await this.$myAxios.delete(`/category/${catId}`)
+                await this.fetchCategories()
+            }
         },
-        addCategory(){
+        async addCategory(){
             if (this.newCatName.trim().length == 0){
                 return
             }
             if (this.catList.map(cat => cat.name).includes(this.newCatName)){
                 return 
             }
-            this.catList.push({
-                id: -1,
-                name: this.newCatName
-            })
+            
+            await this.$myAxios.post('/category', {name: this.newCatName})
             this.newCatName = '';
+            await this.fetchCategories()
+        },
+
+        async fetchCategories(){
+            let res = await this.$myAxios.get('/category')
+            this.catList = res.data
         }
+    },
+    async mounted(){
+        this.fetchCategories()
     }
 }
 </script>

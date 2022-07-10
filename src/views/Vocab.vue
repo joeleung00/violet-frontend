@@ -1,55 +1,56 @@
 <template>
     <div class="container">
-        <h1>Your Vocabularies</h1>
+        <h1>Your Vocabulary</h1>
         <ul>
-            <VocabListItem v-for="word in words" 
-            :key="word.id"
-            :word="word" />
+            <VocabListItem v-for="vocab in vocabs" 
+            :key="vocab.id"
+            :vocab="vocab" />
         </ul>
     </div>
+    <PaginationBar v-model:current="page.current" :total="page.total"/>
 </template>
 
 <script>
 import VocabListItem from "@/components/VocabListItem.vue";
+import PaginationBar from "@/components/PaginationBar.vue";
+import Utils from '@/utils/utils';
 
 
 export default {
     components: {
-        VocabListItem
+        VocabListItem, PaginationBar
     },
     data(){
         return {
-            words: [
-                {
-                    id: 1,
-                    name: 'Boorish',
-                    explainations: ['粗野', '粗野'],
-                    sentence: {
-                        english: 'a boorish plutocrat, recounts what he learned from a book called “The Rise of the Coloured Empires”, by a man called “Goddard”.',
-                        chinese: '一个粗野的财阀，讲述了他从一本叫做《有色帝国的崛起》的书中所学到的东西，这本书的作者叫 “戈达德”。'
-                    }
-                },
-                {
-                    id: 2,
-                    name: 'Boorish',
-                    explainations: ['粗野', '粗野'],
-                    sentence: {
-                        english: 'a boorish plutocrat, recounts what he learned from a book called “The Rise of the Coloured Empires”, by a man called “Goddard”.',
-                        chinese: '一个粗野的财阀，讲述了他从一本叫做《有色帝国的崛起》的书中所学到的东西，这本书的作者叫 “戈达德”。'
-                    }
-                },
-                {
-                    id: 3,
-                    name: 'Boorish',
-                    explainations: ['粗野', '粗野'],
-                    sentence: {
-                        english: 'a boorish plutocrat, recounts what he learned from a book called “The Rise of the Coloured Empires”, by a man called “Goddard”.',
-                        chinese: '一个粗野的财阀，讲述了他从一本叫做《有色帝国的崛起》的书中所学到的东西，这本书的作者叫 “戈达德”。'
-                    }
-                },
-
-            ]
+            vocabs: [],
+            page: {
+                current: 1,
+                total: 1
+            }
         }
+    },
+    watch: {
+        'page.current'(){
+            this.fetchVocabs()
+        }
+    },
+    methods: {
+        async fetchVocabs(){
+            let param = {
+                pageNumber: this.page.current - 1,
+                pageSize: 10
+            }
+            let paramStr = Utils.convertObject2ParamString(param)
+            let res = await this.$myAxios.get(`/vocab?${paramStr}`)
+            this.page.total = res.data.totalPages
+            this.vocabs = res.data.content
+            this.vocabs.forEach(v => {
+                v.explainations = v.explainationDto.explainations
+            })
+        }
+    },
+    mounted() {
+        this.fetchVocabs()
     }
 }
 
@@ -63,6 +64,8 @@ export default {
     color: #AA5CB2;
     margin: 2rem 3rem;
     color: black;
+    overflow: scroll;
+    height: 75vh;
 }
 
 ul {
@@ -74,6 +77,5 @@ ul {
 ul > * {
     margin: 1rem auto;
 }
-
 
 </style>

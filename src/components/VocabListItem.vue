@@ -1,18 +1,18 @@
 <template>
     <li class="item-container" >
         <div class="heading" @click="expand">
-            <span>Boorish</span>
+            <span>{{ vocab.vocab }}</span>
             <img :class="{'rotate-icon': isExpanded}" src="/images/expandIcon.svg" alt="expandIcon">
         </div>
         <div class="body" v-if="isExpanded">
             <ul class="explain">
-                <li v-for="(explain, index) in word.explainations"
+                <li v-for="(explain, index) in vocab.explainations"
                     :key="index">
                     {{ explain }}
                 </li>
             </ul>
-            <p>{{ word.sentence.english }}</p>
-            <p>{{ word.sentence.chinese }}</p>
+            <p>{{ vocab.sentenceEng }}</p>
+            <p>{{ vocab.sentenceChin }}</p>
         </div>
     </li>
 </template>
@@ -20,7 +20,7 @@
 <script>
 export default {
     props: {
-        word: {type: Object, required: true}
+        vocab: {type: Object, required: true}
     },
     data(){
         return {
@@ -38,7 +38,7 @@ export default {
 
 <style scoped>
 .item-container {
-    padding: 0.4rem 2rem;
+    padding: 0.2rem 2rem;
     border: 2px solid #AE9AB1;
     border-radius: 1.5rem;;
 
@@ -47,6 +47,10 @@ export default {
 .heading {
     display: flex;
     justify-content: space-between;
+}
+
+.heading > span {
+    padding-top:0.2rem;
 }
 
 .heading:hover {
@@ -75,7 +79,7 @@ img {
 span {
     display: inline-block;
     position: relative;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
 }
 
 .rotate-icon {
